@@ -7,6 +7,7 @@
     create table org_members (
     org_id  uuid references orgs(id) on delete cascade,
     user_id uuid references auth.users(id) on delete cascade,
+    name text not null,
     role    text not null default 'member',   -- 'admin' | 'member'
     primary key (org_id, user_id)
   );
@@ -17,3 +18,7 @@
     title   text not null,
     done    boolean not null default false
   );
+
+  alter table orgs        enable row level security;
+  alter table org_members enable row level security;
+  alter table tasks       enable row level security;
