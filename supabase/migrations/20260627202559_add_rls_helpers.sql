@@ -1,20 +1,48 @@
-create function is_org_member(target_org uuid)
-returns boolean language sql security definer stable as $$
+create or replace function public.is_org_member(target_org uuid)
+returns boolean
+language sql
+security definer
+set search_path = ''
+stable
+as $$
   select exists (
-    select 1 from org_members
+    select 1 from public.org_members
     where org_id = target_org and user_id = auth.uid()
   );
 $$;
 
-create function is_org_admin(target_org uuid)
-returns boolean language sql security definer stable as $$
+create or replace function public.is_org_admin(target_org uuid)
+returns boolean
+language sql
+security definer
+set search_path = ''
+stable
+as $$
   select exists (
-    select 1 from org_members
+    select 1 from public.org_members
     where org_id = target_org
       and user_id = auth.uid()
       and role = 'admin'
   );
 $$;
+
+-- create function is_org_member(target_org uuid)
+-- returns boolean language sql security definer stable as $$
+--   select exists (
+--     select 1 from org_members
+--     where org_id = target_org and user_id = auth.uid()
+--   );
+-- $$;
+
+-- create function is_org_admin(target_org uuid)
+-- returns boolean language sql security definer stable as $$
+--   select exists (
+--     select 1 from org_members
+--     where org_id = target_org
+--       and user_id = auth.uid()
+--       and role = 'admin'
+--   );
+-- $$;
 
 -- create function is_org_admin(user_role)
 -- returns boolean language sql security definer stable as $$
